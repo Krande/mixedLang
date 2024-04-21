@@ -1,0 +1,7 @@
+name: waf-build
+channels:
+  - conda-forge
+dependencies:
+  - waf
+  - ninja
+  - vswhere

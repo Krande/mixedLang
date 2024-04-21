@@ -12,6 +12,19 @@ fortran_src = ['src/bibfor/func.f90']  # Add your Fortran source files here
 # Create a shared library from the Fortran sources
 fort_lib = shared_library('myfortlib', fortran_src, install : true, version : '1.0')
 
+# Get .obj file from the Fortran shared library
+
+
+# Need to find a way to run this during build only (not during configuration)
+# fort_obj_path = meson.current_source_dir() / 'buildDir' / 'myfortlib-1.dll.p' / 'src_bibfor_func.f90.obj'
+#run_command(
+#  [
+#    find_program('LIB'),
+#    '/OUT:@0@'.format(meson.current_source_dir() / 'buildDir' / 'myfortlib.lib'),
+#    fort_obj_path,
+#  ],
+#  check: true
+#)
 
 # Define the dependencies needed for linking (if any additional libs are needed)
 dependencies = []

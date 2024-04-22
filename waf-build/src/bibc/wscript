@@ -1,3 +1,6 @@
+from waflib import Build
+
+
 def options(opt):
     opt.load('compiler_c')
 
@@ -6,8 +9,8 @@ def configure(conf):
     conf.load('compiler_c')
 
 
-def build(bld):
-    bld(
+def build(ctx: Build.InstallContext):
+    ctx(
         features="c cshlib",
         name="asterbibc",
         source='sdlprog.c',

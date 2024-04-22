@@ -21,5 +21,7 @@ def configure(self):
 
 
 def build(self):
+    self.load("msvc_utils", tooldir="src/waftools")
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
+

@@ -2,8 +2,10 @@
 setlocal
 
 call conda_env.bat
+
 set FC=ifx.exe
-set FCFLAGS=/nologo
+set FCFLAGS=/nologo /fpp
+
 waf distclean
 
 waf configure ^

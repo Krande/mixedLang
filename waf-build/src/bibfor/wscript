@@ -1,7 +1,4 @@
-import pathlib
-
-from waflib import Build, Logs, Configure
-from waflib.Tools.fc import fcshlib
+from waflib import Build, Configure
 
 
 def options(opt):
@@ -12,15 +9,6 @@ def configure(conf):
     conf.load('compiler_fc')
 
 
-class fcshlib_msvc(fcshlib):
-
-    def exec_command(self, *k, **kw):
-        ret = super(fcshlib_msvc, self).exec_command(*k, **kw)
-        if not ret and self.env.DO_MANIFEST:
-            ret = self.exec_mf()
-        return ret
-
-
 @Configure.conf
 def check_fortran_compiler_flags(self):
     self.check_fortran_compiler_options(["/nologo"])
@@ -29,9 +17,12 @@ def check_fortran_compiler_flags(self):
 
 
 def build(ctx: Build.InstallContext):
+    get_srcs = ctx.path.get_src().ant_glob
+
     ctx(
         features="fc fcshlib",
         name="asterbibfor",
-        source='func.f90',
-        target='bibfor'
+        source=get_srcs("**/*.f90"),
+        target='bibfor',
+        includes=["include"],
     )

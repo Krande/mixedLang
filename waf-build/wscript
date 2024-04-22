@@ -1,7 +1,4 @@
 import os
-from waflib import Build, Configure, Logs, Utils
-from waflib.Tools.c_config import DEFKEYS
-from waflib.Tools.fc import fc
 
 top = "."
 out = "build"
@@ -17,9 +14,10 @@ def options(self):
 def configure(self):
     self.add_os_flags("FCFLAGS")
 
-    self.load("ifort", tooldir="src/waftools")
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
+    # At the moment only needed if not using latest WAF master branch
+    # self.load("ifort", tooldir="src/waftools")
 
 
 def build(self):

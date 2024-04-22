@@ -10,10 +10,17 @@ def configure(conf):
 
 
 def build(ctx: Build.InstallContext):
+    # ctx(
+    #     features="c cshlib",
+    #     name="asterbibclib",
+    #     source='bibc.c',
+    #     target='bibclib'
+    # )
+
     ctx(
         features="c cprogram",
         name="asterbibc",
         source='main.c',
         target='bibcmain',
-        use='bibfor',
+        use='bibfor bibclib',
     )

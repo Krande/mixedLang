@@ -1,4 +1,7 @@
-from waflib import Build
+import pathlib
+
+from waflib import Build, Logs, Configure
+from waflib.Tools.fc import fcshlib
 
 
 def options(opt):
@@ -7,6 +10,22 @@ def options(opt):
 
 def configure(conf):
     conf.load('compiler_fc')
+
+
+class fcshlib_msvc(fcshlib):
+
+    def exec_command(self, *k, **kw):
+        ret = super(fcshlib_msvc, self).exec_command(*k, **kw)
+        if not ret and self.env.DO_MANIFEST:
+            ret = self.exec_mf()
+        return ret
+
+
+@Configure.conf
+def check_fortran_compiler_flags(self):
+    self.check_fortran_compiler_options(["/nologo"])
+    self.start_msg("Fortran compiler flags")
+    self.end_msg(self.env["FCFLAGS"])
 
 
 def build(ctx: Build.InstallContext):

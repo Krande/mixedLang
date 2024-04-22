@@ -7,6 +7,8 @@ import os
 class MSVCLibGen(Task.Task):
     run_str = 'lib /OUT:${TGT} ${SRC}'
     color = 'BLUE'
+    def run(self):
+        Logs.info(f"{self.inputs=}")
 
     def exec_command(self, cmd, **kw):
         """Execute the command"""
@@ -31,32 +33,31 @@ class MSVCLibGen(Task.Task):
 
         kw["env"] = environ
         kw["shell"] = True
+
         # Do this for now.
-        cmd = f"LIB.exe /OUT:{output_fp.as_posix()} @{ofiles.as_posix()}".split()
-        Logs.info("Executing %r", cmd)
+        cmd = f"LIB.exe /NOLOGO /OUT:{output_fp.as_posix()} @{ofiles.as_posix()}".split()
         return super().exec_command(cmd, **kw)
 
 
-@TaskGen.feature("cshlib")
-@TaskGen.after_method("apply_link")
+@TaskGen.feature("cprogram")
+@TaskGen.after_method('propagate_uselib_vars')
 def make_msvc_modifications(self):
     bibfor_gen = self.bld.get_tgen_by_name("asterbibfor")
     bibfor_task_outputs = [task.outputs[0] for task in bibfor_gen.tasks if task.__class__.__name__ == "fc"]
 
     bibc_gen = self.bld.get_tgen_by_name("asterbibc")
-    bibc_task = [task for task in bibc_gen.tasks if task.__class__.__name__ == "cshlib"][0]
+    bibc_task = [task for task in bibc_gen.tasks if task.__class__.__name__ == "cprogram"][0]
 
-    # new_task = MSVCLibGen(env=self.env)
     new_task = self.create_task("MSVCLibGen")
     new_task.set_inputs(bibfor_task_outputs)
 
     bld_path = pathlib.Path(self.bld.bldnode.abspath()).resolve().absolute()
-    bibfor_lib_output_file_path = bld_path / "src/bibfor" / "bibfor_gen.lib"
-
-    Logs.info(f"{bibfor_lib_output_file_path=}")
+    bibfor_lib_output_file_path = bld_path / "src/bibfor" / "bibfor.lib"
 
     bibfor_lib_output_file_node = self.bld.bldnode.make_node(
         bibfor_lib_output_file_path.relative_to(bld_path).as_posix())
+
     new_task.set_outputs([bibfor_lib_output_file_node])
+    new_task.dep_nodes = bibfor_task_outputs
 
     bibc_task.inputs.extend(new_task.outputs)

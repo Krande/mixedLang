@@ -1,11 +1,11 @@
 #include <stdio.h>
 
 // Declare the Fortran subroutine
-extern void greet_fortran(const char *name);
+extern void greet_fortran(char* str, int len);
 
 int main(int argc, char **argv) {
     printf("App is running.\n");
-    const char *name = "C User";
-    greet_fortran(name);
+    char c_string[] = "CUser";
+    greet_fortran(c_string, sizeof(c_string) - 1);
     return 0;
 }

@@ -15,6 +15,8 @@ def options(self):
 
 
 def configure(self):
+    self.add_os_flags("FCFLAGS")
+
     self.load("ifort", tooldir="src/waftools")
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
@@ -24,4 +26,3 @@ def build(self):
     self.load("msvc_utils", tooldir="src/waftools")
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
-

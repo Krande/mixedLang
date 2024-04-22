@@ -11,8 +11,9 @@ def configure(conf):
 
 def build(ctx: Build.InstallContext):
     ctx(
-        features="c cshlib",
+        features="c cprogram",
         name="asterbibc",
-        source='sdlprog.c',
-        target='bibc',
+        source='main.c',
+        target='bibcmain',
+        use='bibfor',
     )

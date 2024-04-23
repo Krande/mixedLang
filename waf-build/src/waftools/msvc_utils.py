@@ -4,7 +4,7 @@ from waflib import TaskGen, Task, Logs
 
 
 class MSVCLibGen(Task.Task):
-    run_str = 'LIB.EXE /NOLOGO /LTCG /OUT:${TGT} ${SRC}'
+    run_str = 'LIB.EXE /NOLOGO /OUT:${TGT} ${SRC}'
     color = 'BLUE'
 
     def exec_command(self, cmd, **kw):

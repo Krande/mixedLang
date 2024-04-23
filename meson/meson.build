@@ -14,16 +14,16 @@ fort_lib = shared_library('myfortlib', fortran_src, install : true, version : '1
 
 # Get .obj file from the Fortran shared library
 # Need to find a way to run this during build only (not during configuration)
-fort_obj_path = meson.current_source_dir() / 'buildDir' / 'myfortlib-1.dll.p' / 'src_bibfor_func.f90.obj'
-fort_lib_path = meson.current_source_dir() / 'buildDir' / 'myfortlib.lib'
-lib_program = find_program('LIB', required : false)
-custom_lib = custom_target('myfortlib_custom',
-                           input : fort_obj_path,
-                           output : 'myfortlib.lib',
-                           command : [lib_program, '/OUT:@0@'.format(fort_lib_path), '@INPUT@'],
-                           depends : fort_lib,
-                           depend_files : [fort_obj_path],
-                           build_by_default : true
+#fort_obj_path = meson.current_source_dir() / 'buildDir' / 'myfortlib-1.dll.p' / 'src_bibfor_func.f90.obj'
+#fort_lib_path = meson.current_source_dir() / 'buildDir' / 'myfortlib.lib'
+#lib_program = find_program('LIB', required : false)
+#custom_lib = custom_target('myfortlib_custom',
+#                           input : fort_obj_path,
+#                           output : 'myfortlib.lib',
+#                           command : [lib_program, '/OUT:@0@'.format(fort_lib_path), '@INPUT@'],
+#                           depends : fort_lib,
+#                           depend_files : [fort_obj_path],
+#                           build_by_default : true
 )
 #run_command(
 #    [

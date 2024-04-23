@@ -4,7 +4,6 @@
 
 #include "include/bibclib.h"
 
-#define F_FUNC( UN, LN ) LN##_
 #include <stdlib.h>
 
 // Function to abort the program

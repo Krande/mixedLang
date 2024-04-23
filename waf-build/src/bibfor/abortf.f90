@@ -1,4 +1,5 @@
 subroutine abortf()
     implicit none
-    call abort()
+#include "abort_custom.h"
+    call abort_custom()
 end subroutine

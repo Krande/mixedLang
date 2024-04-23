@@ -1,11 +1,10 @@
-import pathlib
+import os
 
 from waflib import TaskGen, Task, Logs
-import os
 
 
 class MSVCLibGen(Task.Task):
-    run_str = 'LIB.EXE /NOLOGO /OUT:${TGT} ${SRC}'
+    run_str = 'LIB.EXE /NOLOGO /LTCG /OUT:${TGT} ${SRC}'
     color = 'BLUE'
 
     def exec_command(self, cmd, **kw):
@@ -25,7 +24,6 @@ class MSVCLibGen(Task.Task):
 
 
 def add_lib_task(self, source, target_path: str):
-    bld_path = pathlib.Path(self.bld.bldnode.abspath()).resolve().absolute()
     bibfor_lib_output_file_node = self.bld.bldnode.make_node(target_path)
 
     new_task = self.create_task("MSVCLibGen")
@@ -34,17 +32,66 @@ def add_lib_task(self, source, target_path: str):
     new_task.dep_nodes = source
     return new_task
 
-@TaskGen.feature("cprogram")
+
+bibfor_lib_task = None
+bibc_lib_task = None
+
+
+@TaskGen.feature("fcshlib")
 @TaskGen.after_method('propagate_uselib_vars')
-def make_msvc_modifications(self):
+def make_fc_modifications(self):
     bibfor_gen = self.bld.get_tgen_by_name("asterbibfor")
     bibfor_task_outputs = [task.outputs[0] for task in bibfor_gen.tasks if task.__class__.__name__ == "fc"]
-    bibfor_shlib_task = [task for task in bibfor_gen.tasks if task.__class__.__name__ == "fcshlib"][0]
-    Logs.info(f"{bibfor_shlib_task.outputs=}")
 
-    bibc_gen = self.bld.get_tgen_by_name("asterbibc")
-    bibc_task = [task for task in bibc_gen.tasks if task.__class__.__name__ == "cprogram"][0]
+    bibc_gen = self.bld.get_tgen_by_name("asterbibclib")
+    bibc_task_outputs = [task.outputs[0] for task in bibc_gen.tasks if task.__class__.__name__ == "c"]
 
+    bibfor_task_outputs.extend(bibc_task_outputs)
+    Logs.info(f"{bibfor_task_outputs=}")
+
+    global bibfor_lib_task
     bibfor_lib_task = add_lib_task(self, bibfor_task_outputs, "src/bibfor/bibfor.lib")
 
+
+@TaskGen.feature("cshlib")
+@TaskGen.after_method('propagate_uselib_vars')
+@TaskGen.after_method('fcshlib')
+def make_c_modifications(self):
+    bibc_gen = self.bld.get_tgen_by_name("asterbibclib")
+    bibc_task = [task for task in bibc_gen.tasks if task.__class__.__name__ == "cshlib"][0]
+    bibc_task_outputs = [task.outputs[0] for task in bibc_gen.tasks if task.__class__.__name__ == "c"]
+
+    global bibfor_lib_task
+    if bibfor_lib_task is None:
+        Logs.info("bibfor_lib_task is None")
+        return
     bibc_task.inputs.extend(bibfor_lib_task.outputs)
+    Logs.info(f"{bibc_task.inputs=}")
+
+    global bibc_lib_task
+    bibc_lib_task = add_lib_task(self, bibc_task_outputs, "src/bibc/bibclib.lib")
+
+
+@TaskGen.feature("cxxshlib")
+@TaskGen.after_method('propagate_uselib_vars')
+@TaskGen.after_method('cshlib')
+def make_cxx_modifications(self):
+    bibcxx_gen = self.bld.get_tgen_by_name("asterbibcxxlib")
+    bibcxx_task = [task for task in bibcxx_gen.tasks if task.__class__.__name__ == "cxxshlib"][0]
+    bibcxx_task_outputs = [task.outputs[0] for task in bibcxx_gen.tasks if task.__class__.__name__ == "cxx"]
+
+    Logs.info(f"{bibcxx_task.outputs=}")
+
+    global bibfor_lib_task
+    if bibfor_lib_task is None:
+        Logs.info("bibfor_lib_task is None")
+        return
+    global bibc_lib_task
+    if bibc_lib_task is None:
+        Logs.info("bibc_lib_task is None")
+        return
+    bibcxx_task.inputs.extend(bibfor_lib_task.outputs)
+    bibcxx_task.inputs.extend(bibc_lib_task.outputs)
+    Logs.info(f"{bibcxx_task.inputs=}")
+
+    bibfor_lib_task = add_lib_task(self, bibcxx_task_outputs, "src/bibcxx/bibcxxlib.lib")

@@ -1,13 +1,11 @@
 #include <stdio.h>
+#include "include/bibclib.h"
 
-// Declare the Fortran subroutine
-extern void greet_fortran(char* str, int len);
 
 
 int main(int argc, char **argv) {
-    printf("App is running.\n");
-    char c_string[] = "CUser";
-    greet_fortran(c_string, sizeof(c_string) - 1);
-    printf("App is closing.\n");
+    printf("App (C) is running.\n");
+    greet_all_from_c();
+    printf("App (C) is closing.\n");
     return 0;
 }

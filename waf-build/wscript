@@ -9,18 +9,23 @@ default_prefix = "../install/%s" % install_suffix
 def options(self):
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
+    self.recurse("src/bibcxx")
 
 
 def configure(self):
+    # At the moment only needed if not using latest WAF master branch
+    self.load("ifort", tooldir="src/waftools")
+
     self.add_os_flags("FCFLAGS")
+    self.add_os_flags("CXXFLAGS")
 
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
-    # At the moment only needed if not using latest WAF master branch
-    # self.load("ifort", tooldir="src/waftools")
+    self.recurse("src/bibcxx")
 
 
 def build(self):
     self.load("msvc_utils", tooldir="src/waftools")
     self.recurse("src/bibfor")
     self.recurse("src/bibc")
+    self.recurse("src/bibcxx")

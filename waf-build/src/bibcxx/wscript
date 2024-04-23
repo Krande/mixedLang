@@ -1,0 +1,28 @@
+from waflib import Build
+
+
+def options(opt):
+    opt.load('compiler_cxx')
+
+
+def configure(conf):
+    conf.load('compiler_cxx')
+
+
+def build(ctx: Build.InstallContext):
+    ctx(
+        features="cxx cxxshlib",
+        name="asterbibcxxlib",
+        source='cpplib.cpp',
+        target='bibcxxlib',
+        use='asterbibfor asterbibclib',
+        includes=['../bibc/include'],
+    )
+
+    ctx(
+        features="cxx cxxprogram",
+        name="asterbibcxx",
+        source='main.cpp',
+        target='bibcppmain',
+        use='asterbibcxxlib',
+    )

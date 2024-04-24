@@ -1,0 +1,38 @@
+{
+  "version": 6,
+  "include": [
+    ".env.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "win-msvc-intel-fortran",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "inherits": [
+        "env-vars"
+      ],
+      "warnings": {
+        "dev": false
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Visual Studio (MSVC) with Intel Fortran"
+        }
+      },
+      "environment": {
+        "PREFIX": "$env{MED_PREFIX}",
+        "LIBRARY_PREFIX": "$env{PREFIX}/Library",
+        "CC": "cl.exe",
+        "CXX": "cl.exe",
+        "FC": "ifx.exe"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_GENERATOR_PLATFORM": "",
+        "CMAKE_GENERATOR_TOOLSET": "",
+        "CMAKE_PREFIX_PATH": "$env{PREFIX};$env{LIBRARY_PREFIX};$env{LIBRARY_PREFIX}/include;$env{LIBRARY_PREFIX}/lib;$env{LIBRARY_PREFIX}/bin",
+        "CMAKE_Fortran_FLAGS": "/MD /iface:mixed_str_len_arg"
+      }
+    }
+  ]
+}

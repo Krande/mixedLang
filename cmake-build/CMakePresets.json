@@ -31,7 +31,7 @@
         "CMAKE_GENERATOR_PLATFORM": "",
         "CMAKE_GENERATOR_TOOLSET": "",
         "CMAKE_PREFIX_PATH": "$env{PREFIX};$env{LIBRARY_PREFIX};$env{LIBRARY_PREFIX}/include;$env{LIBRARY_PREFIX}/lib;$env{LIBRARY_PREFIX}/bin",
-        "CMAKE_Fortran_FLAGS": "/MD /iface:mixed_str_len_arg"
+        "CMAKE_Fortran_FLAGS": "/MD /iface:mixed_str_len_arg /names:lowercase"
       }
     }
   ]

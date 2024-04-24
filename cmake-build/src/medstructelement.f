@@ -19,6 +19,7 @@ C*
      &                  sgtype, etype, cret)
 c     DEC$ ATTRIBUTES DLLEXPORT :: msecre
 c
+      use iso_c_binding
       implicit none
       save
       character*(*) mname,smname
@@ -26,8 +27,17 @@ c
       integer   cret,mdim,setype,sgtype,etype
       integer msefcre
 c
+      interface
 
+      integer(c_int) function c_util() bind(C, name="c_util")
+       use iso_c_binding
+      end function c_util
+      end interface
 c
+      integer(c_int) :: res
+      res = c_util()
+
+      print *, "res = ", res
       return
       end
 c

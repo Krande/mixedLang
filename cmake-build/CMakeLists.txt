@@ -18,7 +18,19 @@ SET(medfort_wrap_SOURCES
 
 SET(_export_group "medfileTargets")
 
+ADD_LIBRARY(clibwrap SHARED src/cdummy.c ${medfort_wrap_SOURCES})
 ADD_LIBRARY(medfwrap SHARED ${medfort_wrap_SOURCES})
+
+
+SET_TARGET_PROPERTIES(clibwrap PROPERTIES
+        SOVERSION 11
+        VERSION 11.1.1
+        WINDOWS_EXPORT_ALL_SYMBOLS ON
+        POSITION_INDEPENDENT_CODE ON
+)
+
+target_link_libraries(medfwrap clibwrap)
+
 SET_TARGET_PROPERTIES(medfwrap PROPERTIES
         SOVERSION 11
         VERSION 11.1.1
@@ -30,6 +42,3 @@ INSTALL(TARGETS medfwrap
         EXPORT ${_export_group}
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib${LIB_SUFFIX})
-
-#SET(INSTALL_CMAKE_CONFIG_DIR cmake)
-#INSTALL(EXPORT medfileTargets DESTINATION "${INSTALL_CMAKE_CONFIG_DIR}" FILE ${PROJECT_NAME}Targets.cmake)

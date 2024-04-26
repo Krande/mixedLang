@@ -1,6 +1,5 @@
-import os
-
 from waflib import TaskGen, Task, Logs
+from waflib.ConfigSet import ConfigSet
 
 
 class MSVCLibGen(Task.Task):
@@ -11,7 +10,17 @@ class MSVCLibGen(Task.Task):
         """Execute the command"""
 
         opts = ["/NOLOGO", "/MACHINE:X64"]
-        cmd.extend(opts)
+        cmd = cmd[:2] + opts + cmd[2:]
+
+        task_gen: TaskGen.task_gen = self.generator
+        env: ConfigSet = task_gen.env
+        #for key in env.keys():
+        #    value = env[key]
+            #Logs.info(f"{key=}, {value=}")
+        #lib_path = env.LIBPATH
+        #Logs.info(f"{lib_path=}")
+        #Logs.info(f"{env.keys()}")
+        #Logs.info(f"{task_gen.env=}")
 
         return super(MSVCLibGen, self).exec_command(cmd, **kw)
 

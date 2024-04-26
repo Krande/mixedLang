@@ -4,21 +4,14 @@ from waflib import TaskGen, Task, Logs
 
 
 class MSVCLibGen(Task.Task):
-    run_str = 'LIB.EXE /NOLOGO /OUT:${TGT} ${SRC}'
+    run_str = 'LIB.EXE /OUT:${TGT} ${SRC}'
     color = 'BLUE'
 
     def exec_command(self, cmd, **kw):
         """Execute the command"""
-        environ = None
-        if "env" in kw:
-            environ = kw["env"]
-            del kw["env"]
 
-        if environ is None:
-            environ = os.environ.copy()
-
-        kw["env"] = environ
-        kw["shell"] = True
+        opts = ["/NOLOGO", "/MACHINE:X64"]
+        cmd.extend(opts)
 
         return super(MSVCLibGen, self).exec_command(cmd, **kw)
 

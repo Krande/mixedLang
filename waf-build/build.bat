@@ -13,6 +13,6 @@ waf configure ^
     --check-fortran-compiler=ifort ^
     --prefix=%LIBRARY_PREFIX%
 
-waf install src -v
+waf install -v
 
 endlocal

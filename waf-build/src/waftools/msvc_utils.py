@@ -10,10 +10,11 @@ class MSVCLibGen(Task.Task):
         """Execute the command"""
 
         opts = ["/NOLOGO", "/MACHINE:X64"]
-        cmd = cmd[:2] + opts + cmd[2:]
 
         task_gen: TaskGen.task_gen = self.generator
         env: ConfigSet = task_gen.env
+        for lp in env.LIBPATH:
+            opts.append(f"/LIBPATH:{lp}")
         #for key in env.keys():
         #    value = env[key]
             #Logs.info(f"{key=}, {value=}")
@@ -21,7 +22,7 @@ class MSVCLibGen(Task.Task):
         #Logs.info(f"{lib_path=}")
         #Logs.info(f"{env.keys()}")
         #Logs.info(f"{task_gen.env=}")
-
+        cmd = cmd[:2] + opts + cmd[2:]
         return super(MSVCLibGen, self).exec_command(cmd, **kw)
 
 

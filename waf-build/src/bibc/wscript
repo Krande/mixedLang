@@ -1,3 +1,5 @@
+import pathlib
+
 from waflib import Build
 
 
@@ -17,6 +19,18 @@ def build(ctx: Build.InstallContext):
         target='bibclib',
         includes=[".", 'include'],
         use='asterbibfor',
+    )
+
+    library_prefix_dir = pathlib.Path(ctx.env.PREFIX)
+    prefix_dir = library_prefix_dir.parent
+    py_include = prefix_dir / 'include'
+    pybind11_incl = prefix_dir / 'include' / 'pybind11_global'
+    ctx(
+        features="c cshlib",
+        name="asterpylib",
+        source='python_entry.c',
+        target='bibpylib',
+        includes=[".", 'include', pybind11_incl.as_posix(), py_include.as_posix()],
     )
 
     ctx(

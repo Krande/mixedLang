@@ -79,6 +79,8 @@ def make_c_modifications(self):
 @TaskGen.after_method('propagate_uselib_vars')
 @TaskGen.after_method('cshlib')
 def make_cxx_modifications(self):
+    if self.get_name() != "asterbibcxxlib":
+        return
     bibcxx_gen = self.bld.get_tgen_by_name("asterbibcxxlib")
     bibcxx_task = [task for task in bibcxx_gen.tasks if task.__class__.__name__ == "cxxshlib"][0]
     bibcxx_task_outputs = [task.outputs[0] for task in bibcxx_gen.tasks if task.__class__.__name__ == "cxx"]

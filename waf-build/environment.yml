@@ -5,3 +5,4 @@ dependencies:
   - waf
   - ninja
   - vswhere
+  - pybind11
